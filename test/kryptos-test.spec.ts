@@ -43,7 +43,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
   if (electronApp) {
     await electronApp.close();
   }
-});
+
 
 test('Uygulamaya login yap', async () => {
   test.setTimeout(120000);
