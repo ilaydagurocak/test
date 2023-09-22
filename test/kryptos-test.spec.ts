@@ -8,13 +8,10 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const beforeAllTimeout = 60000;
 
 test.beforeAll(async () => {
-  test.setDefaultTimeout(beforeAllTimeout);
-
   process.env.CI = 'e2e';
   electronApp = await electron.launch({
     executablePath: "C:\\Users\\vboxuser\\Downloads\\KryptosWDE_latest.exe"
   });
-
   electronApp.on('window', async (page) => {
     const filename = page.url()?.split('/').pop();
     console.log(`Window opened: ${filename}`);
@@ -28,7 +25,8 @@ test.beforeAll(async () => {
     });
   });
 });
-test.afterAll(async () => {
+
+test.configure({ timeout: beforeAllTimeout });
   await sleep(10000);
   if(electronApp) {
     await electronApp.close();
