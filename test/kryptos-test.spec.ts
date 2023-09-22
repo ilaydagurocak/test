@@ -36,9 +36,9 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
       console.log(msg.text());
     });
   });
-});
 
-test.afterAll(async () => {
+
+
   await sleep(10000);
   if (electronApp) {
     await electronApp.close();
