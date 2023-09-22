@@ -1,23 +1,25 @@
-import { test, expect } from '@playwright/test';
-import { ElectronApplication, Page } from '@playwright/core';  // Adjusted the import for ElectronApplication and Page.
+import { expect, test } from '@playwright/test';
+import { ElectronApplication, Page, _electron as electron } from '@playwright/test';
 
 let electronApp: ElectronApplication;
 let page: Page;
+const password = "Linos1140!";
 
-const password = 'Linos1140!';  // Define your password or import it from another file/module.
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 test.beforeAll(async () => {
   process.env.CI = 'e2e';
-  electronApp = await test.electron.launch({  // Adjusted the electron launch function.
+  electronApp = await electron.launch({
     executablePath: "C:\\Users\\vboxuser\\Downloads\\KryptosWDE_latest.exe"
   });
   electronApp.on('window', async (page) => {
     const filename = page.url()?.split('/').pop();
     console.log(`Window opened: ${filename}`);
+
     page.on('pageerror', (error) => {
       console.error(error);
     });
+
     page.on('console', (msg) => {
       console.log(msg.text());
     });
@@ -32,22 +34,32 @@ test.afterAll(async () => {
 });
 
 test('Uygulamaya login yap', async () => {
-  const newPage = await electronApp.waitForEvent('window', { timeout: 120000 });
-  const title = await newPage.title();
-  
-  if (title !== "Kryptos") {
+  test.setTimeout(120000);
+  const timeout = 120000; 
+  const startTime = Date.now();
+
+  while ((Date.now() - startTime) <= timeout) {
+    const newPage = await electronApp.waitForEvent('window');
+    const title = await newPage.title();
+
+    if (title === "Kryptos Free") {
+      page = newPage;
+      break;
+    }
+  }
+
+  if (!page) {
     throw new Error('Timeout waiting for the login window');
   }
-  
-  page = newPage;
 
+  await sleep(30000);
   await page.fill('[role="textbox"]', password);
   const buttons = await page.$$('button');
-  await buttons[1].click(); // Assuming the second button is the one you need to click.
+  await buttons[1].click(); // 2. butona tıkla
 
-  const newWindow = await electronApp.waitForEvent('window', { timeout: 120000 });
+  const newWindow = await electronApp.waitForEvent('window');
   const newWindowTitle = await newWindow.title();
-  expect(newWindowTitle).toBe('Kryptos');
-
+  expect(newWindowTitle).toBe('Kryptos Free');
+  
   page = newWindow;
 });
