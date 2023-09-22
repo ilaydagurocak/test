@@ -5,7 +5,8 @@ let electronApp: ElectronApplication;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-test.beforeAll(async ({ timeout }) => {
+const beforeAllTimeout = 60000;
+test.beforeAll(async () => {
   process.env.CI = 'e2e';
   electronApp = await electron.launch({
     executablePath: "C:\\Users\\vboxuser\\Downloads\\KryptosWDE_latest.exe"
@@ -22,7 +23,7 @@ test.beforeAll(async ({ timeout }) => {
       console.log(msg.text());
     });
   });
-}, { timeout: 60000 });
+}).timeout(beforeAllTimeout);
 test.afterAll(async () => {
   await sleep(10000);
   if(electronApp) {
