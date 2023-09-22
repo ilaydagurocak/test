@@ -27,11 +27,13 @@ test.beforeAll(async () => {
 });
 
 test.configure({ timeout: beforeAllTimeout });
+
+test.afterAll(async () => {
   await sleep(10000);
   if(electronApp) {
     await electronApp.close();
   }  
-})
+});
 
 let page: Page;
 let password = "Linos1140!";
