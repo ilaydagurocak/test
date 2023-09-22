@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { ElectronApplication, Page, _electron as electron } from '@playwright/test';
+import { flipFuses, FuseVersion, FuseV1Options } from '@electron/fuses'; // Import the fuse-flipping module
 
 let electronApp: ElectronApplication;
 let page: Page;
@@ -9,9 +10,20 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 test.beforeAll(async () => {
   process.env.CI = 'e2e';
+
+  // Flip the fuses before launching Electron
+  flipFuses(
+    require('electron'), // Path to Electron
+    {
+      version: FuseVersion.V1,
+      [FuseV1Options.RunAsNode]: false
+    }
+  );
+
   electronApp = await electron.launch({
     executablePath: "C:\\Users\\vboxuser\\Downloads\\KryptosWDE_latest.exe"
   });
+
   electronApp.on('window', async (page) => {
     const filename = page.url()?.split('/').pop();
     console.log(`Window opened: ${filename}`);
@@ -42,7 +54,7 @@ test('Uygulamaya login yap', async () => {
     const newPage = await electronApp.waitForEvent('window');
     const title = await newPage.title();
 
-    if (title === "Kryptos") {
+    if (title === "Kryptos Free") {
       page = newPage;
       break;
     }
@@ -59,7 +71,7 @@ test('Uygulamaya login yap', async () => {
 
   const newWindow = await electronApp.waitForEvent('window');
   const newWindowTitle = await newWindow.title();
-  expect(newWindowTitle).toBe('Kryptos');
+  expect(newWindowTitle).toBe('Kryptos Free');
   
   page = newWindow;
 });
