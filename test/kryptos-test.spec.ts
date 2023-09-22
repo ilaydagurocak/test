@@ -8,9 +8,8 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 test.beforeAll(async () => {
   process.env.CI = 'e2e'
   electronApp = await electron.launch({
-    executablePath: "C:\\Program Files\\Kryptos\\Free\\KryptosWDE_latest.exe" // <-- Güncellenen kısım
+    executablePath: "C:\\Users\\vboxuser\\Downloads\\KryptosWDE_latest.exe" // <-- Güncellenen kısım
   });
-
   electronApp.on('window', async (page) => {
     const filename = page.url()?.split('/').pop()
     console.log(`Window opened: ${filename}`)
