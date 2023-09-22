@@ -1,7 +1,9 @@
-import { expect, test, beforeAll, afterAll } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { flipFuses, FuseVersion, FuseV1Options } from '@electron/fuses';
 
-beforeAll(async () => {
+test('Uygulamaya login yap', async ({ electron }) => {
+  const password = "Linos1140!";
+
   // Flip the fuses before launching Electron
   flipFuses(
     require('electron'), // Path to Electron
@@ -10,10 +12,6 @@ beforeAll(async () => {
       [FuseV1Options.RunAsNode]: false
     }
   );
-});
-
-test('Uygulamaya login yap', async ({ electron }) => {
-  const password = "Linos1140!";
 
   // Launch Electron
   const electronApp = await electron.launch({
