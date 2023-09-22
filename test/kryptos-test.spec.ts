@@ -42,7 +42,7 @@ test('Uygulamaya login yap', async () => {
     const newPage = await electronApp.waitForEvent('window');
     const title = await newPage.title();
 
-    if (title === "Kryptos Free") {
+    if (title === "Kryptos") {
       page = newPage;
       break;
     }
@@ -59,7 +59,7 @@ test('Uygulamaya login yap', async () => {
 
   const newWindow = await electronApp.waitForEvent('window');
   const newWindowTitle = await newWindow.title();
-  expect(newWindowTitle).toBe('Kryptos Free');
+  expect(newWindowTitle).toBe('Kryptos');
   
   page = newWindow;
 });
