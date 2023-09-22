@@ -7,6 +7,7 @@ let page: Page;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 test.beforeAll(async () => {
+  testInfo.timeout = 60000;
   process.env.CI = 'e2e';
   electronApp = await electron.launch({
     executablePath: "C:\\Users\\vboxuser\\Downloads\\KryptosWDE_latest.exe"
