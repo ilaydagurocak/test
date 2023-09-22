@@ -5,26 +5,24 @@ let electronApp: ElectronApplication;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-test.beforeAll(async ({ timeout }) => {
-  timeout(60000);
-  process.env.CI = 'e2e'
+test.beforeAll(async () => {
+  process.env.CI = 'e2e';
   electronApp = await electron.launch({
-    executablePath: "C:\\Users\\vboxuser\\Downloads\\KryptosWDE_latest.exe" // <-- Güncellenen kısım
+    executablePath: "C:\\Users\\vboxuser\\Downloads\\KryptosWDE_latest.exe"
   });
   electronApp.on('window', async (page) => {
-    const filename = page.url()?.split('/').pop()
-    console.log(`Window opened: ${filename}`)
+    const filename = page.url()?.split('/').pop();
+    console.log(`Window opened: ${filename}`);
 
     page.on('pageerror', (error) => {
-      console.error(error)
-    })
+      console.error(error);
+    });
 
     page.on('console', (msg) => {
-      console.log(msg.text())
-    })
-  })
-
-})
+      console.log(msg.text());
+    });
+  });
+});
 
 test.afterAll(async () => {
   await sleep(10000);
