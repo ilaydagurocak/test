@@ -8,7 +8,7 @@ const password = "Linos1140!";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-test.beforeAll(async () => {
+
   process.env.CI = 'e2e';
 
   // Flip the fuses before launching Electron
