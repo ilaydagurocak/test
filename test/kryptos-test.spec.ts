@@ -50,7 +50,7 @@ while ((Date.now() - startTime) <= timeout) {
     throw new Error('Timeout waiting for the login window');
   }
 
-  await sleep(300000);
+  await sleep(3000000);
   await page.fill('[role="textbox"]', password);
   const buttons = await page.$$('button');
   await buttons[1].click(); // 2. butona tıkla
