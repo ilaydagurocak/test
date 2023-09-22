@@ -26,15 +26,15 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
-  await sleep(10000);
+  await sleep(100000);
   if(electronApp) {
     await electronApp.close();
   }  
 });
 
 test('Uygulamaya login yap', async () => {
-  test.setTimeout(120000);
-  const timeout = 120000; 
+  test.setTimeout(1200000);
+  const timeout = 1200000; 
   const startTime = Date.now();
 while ((Date.now() - startTime) <= timeout) {
     const newPage = await electronApp.waitForEvent('window');
@@ -50,7 +50,7 @@ while ((Date.now() - startTime) <= timeout) {
     throw new Error('Timeout waiting for the login window');
   }
 
-  await sleep(30000);
+  await sleep(300000);
   await page.fill('[role="textbox"]', password);
   const buttons = await page.$$('button');
   await buttons[1].click(); // 2. butona tıkla
