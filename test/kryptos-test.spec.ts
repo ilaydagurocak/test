@@ -2,10 +2,9 @@ import { expect, test } from '@playwright/test';
 import { ElectronApplication, Page, _electron as electron } from '@playwright/test';
 
 let electronApp: ElectronApplication;
+let page: Page;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-const beforeAllTimeout = 60000;
 
 test.beforeAll(async () => {
   process.env.CI = 'e2e';
@@ -26,8 +25,6 @@ test.beforeAll(async () => {
   });
 });
 
-test.configure({ timeout: beforeAllTimeout });
-
 test.afterAll(async () => {
   await sleep(10000);
   if(electronApp) {
@@ -35,39 +32,32 @@ test.afterAll(async () => {
   }  
 });
 
-let page: Page;
-let password = "Linos1140!";
-
 test('Uygulamaya login yap', async () => {
   test.setTimeout(120000);
-
   const timeout = 120000; 
   const startTime = Date.now();
+while ((Date.now() - startTime) <= timeout) {
+    const newPage = await electronApp.waitForEvent('window');
+    const title = await newPage.title();
 
-  if (page.title() != "Kryptos Free" ) {
-    while (true) {
-  
-      if (Date.now() - startTime > timeout) {
-        throw new Error('Timeout waiting for the login window');
-      }
-      const newPage = await electronApp.waitForEvent('window');
-      const title = await newPage.title();
-      
-      if (title == "Kryptos Free") {
-        page = newPage;
-        break;
-      }
+    if (title === "Kryptos Free") {
+      page = newPage;
+      break;
     }
   }
 
-  await sleep(30000);
+  if (!page) {
+    throw new Error('Timeout waiting for the login window');
+  }
 
-  await page.getByRole('textbox').fill(password);
-  await page.$$eval('button', (buttons, index) => buttons[index].click(), 1);
+  await sleep(30000);
+  await page.fill('[role="textbox"]', password);
+  const buttons = await page.$$('button');
+  await buttons[1].click(); // 2. butona tıkla
 
   const newWindow = await electronApp.waitForEvent('window');
   const newWindowTitle = await newWindow.title();
   expect(newWindowTitle).toBe('Kryptos Free');
   
   page = newWindow;
-});
+});  
